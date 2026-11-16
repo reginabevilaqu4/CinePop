@@ -1,0 +1,632 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CinePop | Cinema & Experiência</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --red:#e50924;
+  --red2:#ff304b;
+  --bg:#09090d;
+  --panel:#15151e;
+  --panel2:#20202b;
+  --white:#f8f8fb;
+  --muted:#92929f;
+  --gold:#f6c76a;
+  --green:#35c98a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{
+ height:78px;padding:0 7%;display:flex;align-items:center;
+ justify-content:space-between;position:fixed;top:0;left:0;width:100%;
+ z-index:100;background:rgba(9,9,13,.94);
+ backdrop-filter:blur(18px);border-bottom:1px solid #292933
+}
+.logo{font-family:Outfit;font-size:30px;font-weight:900;letter-spacing:-1px;color:white;text-decoration:none}
+.logo span{color:var(--red)}
+.logo small{display:block;font-family:'DM Sans';font-size:8px;letter-spacing:4px;color:var(--muted);margin-top:-5px}
+nav{display:flex;gap:27px}
+nav a{color:#ccc;text-decoration:none;font-size:12px;font-weight:700}
+nav a:hover{color:var(--red)}
+.btn,.primary{
+ background:linear-gradient(135deg,var(--red),#b90020);
+ border:0;color:white;padding:13px 20px;border-radius:8px;font-weight:900;
+ transition:.2s
+}
+.btn:hover,.primary:hover{transform:translateY(-2px);filter:brightness(1.15)}
+.menu{display:none;background:none;border:0;color:white;font-size:25px}
+.hero{
+ min-height:690px;padding:150px 8% 90px;display:flex;align-items:center;
+ background:linear-gradient(90deg,#09090d 5%,rgba(9,9,13,.91) 42%,rgba(9,9,13,.2)),
+ linear-gradient(0deg,#09090d,transparent 40%),
+ url('https://image.tmdb.org/t/p/original/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg') center/cover
+}
+.hero-content{max-width:600px}
+.kicker{color:var(--red2);font-size:11px;letter-spacing:3px;font-weight:900;margin-bottom:18px}
+.hero h1{font-family:Outfit;font-size:clamp(48px,7vw,83px);line-height:.98;letter-spacing:-3px;margin-bottom:22px}
+.hero h1 span{color:var(--red)}
+.hero p{color:#c4c4ce;line-height:1.8;font-size:14px;max-width:490px;margin-bottom:25px}
+.tags{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:27px}
+.tag{border:1px solid #555;padding:7px 11px;border-radius:5px;font-size:10px;font-weight:800}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.secondary{background:#ffffff12;border:1px solid #ffffff45;color:white;padding:13px 20px;border-radius:8px;font-weight:800}
+.stats{display:flex;gap:35px;margin-top:45px}
+.stat strong{font-family:Outfit;font-size:25px;display:block}
+.stat span{font-size:10px;color:var(--muted)}
+section{padding:80px 8%}
+.heading{margin-bottom:30px}
+.heading .kicker{margin-bottom:9px}
+.heading h2{font-family:Outfit;font-size:clamp(29px,4vw,42px)}
+.heading p{color:var(--muted);font-size:13px;margin-top:8px}
+.catalog{background:#0e0e14}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+.search{flex:1;min-width:200px;background:var(--panel);border:1px solid #343440;color:white;padding:13px;border-radius:8px;outline:none}
+.filter{background:var(--panel);border:1px solid #343440;color:#ccc;padding:11px 15px;border-radius:7px;font-size:11px;font-weight:800}
+.filter.active,.filter:hover{background:var(--red);border-color:var(--red);color:white}
+.movie-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.movie{background:#181820;border:1px solid #292933;border-radius:11px;overflow:hidden;transition:.25s}
+.movie:hover{transform:translateY(-7px);border-color:var(--red)}
+.poster{height:300px;position:relative;background:#252530}
+.poster img{width:100%;height:100%;object-fit:cover}
+.age{position:absolute;top:12px;left:12px;background:#08080bdc;padding:6px 9px;border-radius:5px;font-size:10px;font-weight:900}
+.movie-info{padding:15px}
+.movie-info h3{font-family:Outfit;font-size:17px;margin-bottom:6px}
+.meta{font-size:10px;color:var(--muted);margin-bottom:12px}
+.description{font-size:11px;color:#aaa;line-height:1.6;min-height:53px}
+.movie-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid #333}
+.rating{color:var(--gold);font-size:12px;font-weight:900}
+.movie-bottom button{background:var(--red);border:0;color:white;padding:8px 11px;border-radius:5px;font-size:10px;font-weight:900}
+.promo{background:linear-gradient(100deg,#e50924,#810018);padding:42px 8%;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.promo h2{font-family:Outfit;font-size:30px}
+.promo p{font-size:12px;color:#ffe1e5;margin-top:8px}
+.promo button{background:white;color:#bd001d;border:0;padding:14px 20px;border-radius:8px;font-weight:900}
+.booking{background:#0b0b10}
+.booking-layout{display:grid;grid-template-columns:1.2fr .8fr;gap:25px;align-items:start}
+.panel{background:var(--panel);border:1px solid #30303a;border-radius:12px;padding:24px}
+.panel h3{font-family:Outfit;font-size:21px;margin-bottom:20px}
+.field{margin-bottom:17px}
+.field label{display:block;color:#aaa;font-size:10px;font-weight:900;letter-spacing:1px;margin-bottom:8px}
+.field input,.field select{
+ width:100%;padding:12px;background:#22222d;border:1px solid #3b3b47;
+ border-radius:7px;color:white;outline:none
+}
+.field input:focus,.field select:focus{border-color:var(--red)}
+.room-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:25px}
+.room-option{background:#22222d;border:1px solid #41414d;border-radius:9px;padding:13px 8px;color:white;text-align:center;transition:.2s}
+.room-option.active{border-color:var(--red);background:#42121e}
+.room-option strong{display:block;font-size:12px;margin:7px 0}
+.room-option small{color:#aaa;font-size:9px;line-height:1.5}
+.room-icon{font-size:24px}
+.screen{width:82%;height:7px;margin:28px auto 35px;border-radius:50%;background:#eee;box-shadow:0 5px 23px #fff8;position:relative}
+.screen:after{content:'TELA';position:absolute;top:14px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:5px;color:#777}
+.legend{display:flex;justify-content:center;gap:15px;flex-wrap:wrap;margin-bottom:20px}
+.legend span{font-size:10px;color:#aaa;display:flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+.seats{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;max-width:400px;margin:auto}
+.seat{height:33px;border:0;border-radius:7px 7px 3px 3px;background:#393945;color:#ccc;font-size:9px;font-weight:900}
+.seat:hover:not(:disabled){filter:brightness(1.5)}
+.seat.selected{background:var(--green);color:#062d1e}
+.seat.occupied{background:#641c2b;color:#f2a8b5;cursor:not-allowed}
+.seat.vip{border:1px solid var(--gold)}
+.seat-help{text-align:center;color:var(--muted);font-size:10px;margin-top:18px}
+.food-section{margin-top:32px;padding-top:25px;border-top:1px solid #34343e}
+.food-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.food-card{background:#22222d;border:1px solid #383844;border-radius:9px;padding:13px}
+.food-card .food-icon{font-size:27px}
+.food-card h4{font-size:13px;margin:7px 0 4px}
+.food-card p{font-size:10px;color:#aaa;margin-bottom:10px}
+.food-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.food-row strong{color:var(--gold);font-size:12px}
+.quantity{display:flex;align-items:center;gap:9px}
+.quantity button{background:#393945;border:0;color:white;width:25px;height:25px;border-radius:5px;font-weight:900}
+.quantity span{font-size:12px;min-width:12px;text-align:center}
+.summary{position:sticky;top:100px}
+.summary-movie{display:flex;gap:13px;align-items:center;padding-bottom:18px;border-bottom:1px solid #333;margin-bottom:15px}
+.summary-movie img{width:57px;height:78px;object-fit:cover;border-radius:6px}
+.summary-movie h4{font-size:14px;margin-bottom:5px}
+.summary-movie p{font-size:10px;color:#aaa}
+.line{display:flex;justify-content:space-between;gap:12px;margin:13px 0;font-size:11px;color:#aaa}
+.line strong{color:white;text-align:right}
+.total{border-top:1px solid #333;padding-top:18px;margin-top:20px;display:flex;justify-content:space-between;align-items:center}
+.total span{font-size:13px;color:#aaa}
+.total strong{font-family:Outfit;font-size:25px;color:var(--green)}
+.checkout{width:100%;padding:15px;background:var(--red);border:0;color:white;border-radius:8px;font-weight:900;margin-top:22px}
+.checkout:disabled{opacity:.4;cursor:not-allowed}
+.notice{text-align:center;color:#777;font-size:9px;line-height:1.6;margin-top:12px}
+.benefits{background:#111119}
+.benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.benefit{background:#1a1a24;border:1px solid #30303a;border-radius:10px;padding:25px}
+.benefit .icon{font-size:27px;margin-bottom:14px}
+.benefit h3{font-family:Outfit;font-size:17px;margin-bottom:9px}
+.benefit p{color:#999;font-size:11px;line-height:1.8}
+footer{padding:40px 8%;background:#07070a;border-top:1px solid #25252d}
+.footer-content{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.footer-links{display:flex;gap:18px;flex-wrap:wrap}
+.footer-links a{color:#aaa;text-decoration:none;font-size:11px}
+.footer-copy{color:#666;font-size:10px;border-top:1px solid #292933;padding-top:18px;margin-top:25px}
+.modal{display:none;position:fixed;inset:0;z-index:300;background:#000d;backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}
+.modal-box{background:#191922;border:1px solid #444;border-radius:13px;padding:28px;width:100%;max-width:460px;max-height:90vh;overflow:auto;position:relative}
+.close{position:absolute;right:15px;top:10px;border:0;background:none;color:white;font-size:26px}
+.modal-box h2{font-family:Outfit;font-size:24px;margin-bottom:8px}
+.modal-sub{color:#999;font-size:11px;line-height:1.7;margin-bottom:20px}
+.pay-option{display:block;background:#252530;border:1px solid #41414d;padding:13px;border-radius:7px;margin-bottom:9px;font-size:12px}
+.pay-option input{accent-color:var(--red);margin-right:9px}
+.ticket{background:#22222d;border:1px dashed #aaa;border-radius:10px;padding:20px;margin:20px 0;text-align:center}
+.ticket-code{font-family:monospace;color:var(--gold);font-size:24px;letter-spacing:3px;margin:15px}
+.ticket p{font-size:11px;color:#bbb;margin:7px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,100px);opacity:0;background:#292934;color:white;padding:13px 20px;border-radius:8px;z-index:500;font-size:12px;transition:.3s}
+.toast.show{transform:translate(-50%,0);opacity:1}
+@media(max-width:950px){.movie-grid{grid-template-columns:repeat(3,1fr)}.booking-layout{grid-template-columns:1fr}.summary{position:static}}
+@media(max-width:700px){
+ header{padding:0 5%}
+ nav{display:none;position:absolute;top:78px;left:0;width:100%;background:#111119;padding:25px;flex-direction:column}
+ nav.open{display:flex}
+ .menu{display:block}.header-buy{display:none}
+ .hero{padding:140px 6% 65px;min-height:650px}
+ .hero h1{font-size:52px}
+ section{padding:60px 6%}
+ .movie-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .poster{height:225px}
+ .movie-info{padding:11px}
+ .movie-info h3{font-size:14px}
+ .description{font-size:10px}
+ .promo{flex-direction:column;align-items:flex-start}
+ .benefit-grid{grid-template-columns:1fr}
+ .room-grid{gap:5px}
+ .room-option{padding:10px 4px}
+ .seats{gap:5px}
+ .seat{height:28px;font-size:8px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <a href="#inicio" class="logo">CINE<span>POP</span><small>SEU CINEMA COMEÇA AQUI</small></a>
+ <nav id="nav">
+  <a href="#inicio">Início</a>
+  <a href="#filmes">Filmes</a>
+  <a href="#reservar">Reservas</a>
+  <a href="#lanchonete">Lanchonete</a>
+  <a href="#sobre">Sobre</a>
+ </nav>
+ <button class="btn header-buy" onclick="goBooking()">Comprar ingresso</button>
+ <button class="menu" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
+</header>
+
+<section class="hero" id="inicio">
+ <div class="hero-content">
+  <div class="kicker">✦ UMA EXPERIÊNCIA PARA TODOS OS SENTIDOS</div>
+  <h1>O FILME<br>COMEÇA <span>COM VOCÊ.</span></h1>
+  <p>Escolha seu filme, encontre sua poltrona perfeita e aproveite uma experiência completa. No CinePop, cada sessão é uma nova história.</p>
+  <div class="tags"><span class="tag">SALAS VIP</span><span class="tag">PIPOCA FRESQUINHA</span><span class="tag">INGRESSO DIGITAL</span></div>
+  <div class="hero-actions">
+   <button class="primary" onclick="goBooking()">RESERVAR AGORA →</button>
+   <button class="secondary" onclick="document.getElementById('filmes').scrollIntoView()">EXPLORAR FILMES</button>
+  </div>
+  <div class="stats">
+   <div class="stat"><strong>12+</strong><span>FILMES</span></div>
+   <div class="stat"><strong>3</strong><span>TIPOS DE SALA</span></div>
+   <div class="stat"><strong>100%</strong><span>DIVERSÃO</span></div>
+  </div>
+ </div>
+</section>
+
+<section class="catalog" id="filmes">
+ <div class="heading">
+  <div class="kicker">ESCOLHA SUA PRÓXIMA HISTÓRIA</div>
+  <h2>Filmes em cartaz<span style="color:var(--red)">.</span></h2>
+  <p>Encontre o filme ideal para sua próxima sessão.</p>
+ </div>
+ <div class="controls">
+  <input class="search" id="search" placeholder="Pesquisar filme..." oninput="renderMovies()">
+  <button class="filter active" onclick="filterGenre('Todos',this)">Todos</button>
+  <button class="filter" onclick="filterGenre('Ação',this)">Ação</button>
+  <button class="filter" onclick="filterGenre('Ficção',this)">Ficção</button>
+  <button class="filter" onclick="filterGenre('Animação',this)">Animação</button>
+  <button class="filter" onclick="filterGenre('Drama',this)">Drama</button>
+  <button class="filter" onclick="filterGenre('Aventura',this)">Aventura</button>
+ </div>
+ <div class="movie-grid" id="movieGrid"></div>
+</section>
+
+<div class="promo">
+ <div><h2>Seu filme merece uma grande experiência.</h2><p>Escolha a sala, peça sua pipoca e aproveite.</p></div>
+ <button onclick="goBooking()">ESCOLHER MINHA SESSÃO →</button>
+</div>
+
+<section class="booking" id="reservar">
+ <div class="heading">
+  <div class="kicker">RESERVA COMPLETA</div>
+  <h2>Monte sua experiência<span style="color:var(--red)">.</span></h2>
+  <p>Ingressos, salas especiais e aquele combo de cinema que não pode faltar.</p>
+ </div>
+
+ <div class="booking-layout">
+  <div class="panel">
+   <h3>01. Sua sessão</h3>
+   <div class="field"><label>FILME</label><select id="movieSelect" onchange="updateSummary()"></select></div>
+   <div class="field"><label>DATA</label><input type="date" id="date" onchange="updateSummary()"></div>
+   <div class="field"><label>HORÁRIO</label>
+    <select id="time" onchange="updateSummary()">
+     <option>14:00</option><option>16:30</option><option>19:00</option><option>21:30</option>
+    </select>
+   </div>
+
+   <h3 style="margin-top:25px">02. Escolha sua sala</h3>
+   <div class="room-grid">
+    <button class="room-option active" data-room="Tradicional" onclick="chooseRoom(this)">
+     <div class="room-icon">🎬</div><strong>Tradicional</strong><small>Conforto clássico<br>Sem adicional</small>
+    </button>
+    <button class="room-option" data-room="Premium" onclick="chooseRoom(this)">
+     <div class="room-icon">🛋️</div><strong>Premium</strong><small>Poltronas reclináveis<br>+ R$ 10 por ingresso</small>
+    </button>
+    <button class="room-option" data-room="VIP" onclick="chooseRoom(this)">
+     <div class="room-icon">👑</div><strong>VIP</strong><small>Poltronas reclináveis<br>+ R$ 20 por ingresso</small>
+    </button>
+   </div>
+
+   <h3>03. Escolha suas poltronas</h3>
+   <div class="legend">
+    <span><i class="dot" style="background:#393945"></i>Disponível</span>
+    <span><i class="dot" style="background:#35c98a"></i>Selecionada</span>
+    <span><i class="dot" style="background:#641c2b"></i>Ocupada</span>
+    <span><i class="dot" style="background:#393945;border:1px solid #f6c76a"></i>VIP</span>
+   </div>
+   <div class="screen"></div>
+   <div class="seats" id="seats"></div>
+   <p class="seat-help">Escolha até 6 lugares. As poltronas ocupadas não podem ser selecionadas.</p>
+
+   <div style="border-top:1px solid #333;margin-top:30px;padding-top:25px">
+    <h3>04. Tipo de ingresso</h3>
+    <div class="field">
+     <label>QUEM VAI ASSISTIR?</label>
+     <select id="ticketType" onchange="updateSummary()">
+      <option value="adult">Inteira - R$ 25,00</option>
+      <option value="student">Estudante - R$ 12,50 (meia-entrada)</option>
+      <option value="child">Criança até 6 anos - R$ 10,00</option>
+     </select>
+    </div>
+    <p class="notice" style="text-align:left">A meia-entrada estudantil depende da comprovação válida do benefício. O ingresso infantil é destinado a crianças de até 6 anos, conforme a política demonstrativa deste projeto. Valores sujeitos às regras aplicáveis.</p>
+   </div>
+
+   <div class="food-section" id="lanchonete">
+    <h3>05. Lanchonete CinePop</h3>
+    <p style="font-size:11px;color:#999;margin:-12px 0 18px">Não existe cinema sem pipoca. Isso é praticamente uma lei da física.</p>
+    <div class="food-grid" id="foodGrid"></div>
+   </div>
+  </div>
+
+  <aside class="panel summary">
+   <h3>Resumo do pedido</h3>
+   <div class="summary-movie">
+    <img id="summaryPoster" src="" alt="Cartaz">
+    <div><h4 id="summaryTitle">Selecione um filme</h4><p id="summaryRoom">Sala Tradicional</p></div>
+   </div>
+   <div class="line"><span>Data</span><strong id="sumDate">-</strong></div>
+   <div class="line"><span>Horário</span><strong id="sumTime">14:00</strong></div>
+   <div class="line"><span>Poltronas</span><strong id="sumSeats">Nenhuma</strong></div>
+   <div class="line"><span>Ingresso</span><strong id="sumType">Inteira</strong></div>
+   <div class="line"><span>Ingressos</span><strong id="sumTickets">0</strong></div>
+   <div class="line"><span>Subtotal dos ingressos</span><strong id="sumTicketPrice">R$ 0,00</strong></div>
+   <div class="line"><span>Alimentação</span><strong id="sumFood">R$ 0,00</strong></div>
+   <div id="foodDetails"></div>
+   <div class="total"><span>TOTAL</span><strong id="sumTotal">R$ 0,00</strong></div>
+   <button class="checkout" id="checkout" onclick="openPayment()" disabled>CONTINUAR PARA PAGAMENTO →</button>
+   <p class="notice">Demonstração acadêmica. Nenhuma cobrança real será realizada.</p>
+  </aside>
+ </div>
+</section>
+
+<section class="benefits" id="sobre">
+ <div class="heading">
+  <div class="kicker">A EXPERIÊNCIA CINEPOP</div>
+  <h2>O cinema do seu jeito.</h2>
+  <p>Mais conforto, praticidade e diversão em um só lugar.</p>
+ </div>
+ <div class="benefit-grid">
+  <div class="benefit"><div class="icon">🛋️</div><h3>Salas especiais</h3><p>Escolha entre a sala tradicional, a Premium com poltronas reclináveis e a VIP com conforto exclusivo.</p></div>
+  <div class="benefit"><div class="icon">🍿</div><h3>Lanchonete completa</h3><p>Pipocas de vários tamanhos, bebidas geladas e doces para acompanhar seu filme favorito.</p></div>
+  <div class="benefit"><div class="icon">🎟️</div><h3>Ingresso digital</h3><p>Finalize sua reserva e receba um ingresso demonstrativo com código de identificação.</p></div>
+ </div>
+</section>
+
+<footer>
+ <div class="footer-content">
+  <div><div class="logo">CINE<span>POP</span></div><p style="color:#888;font-size:11px;margin-top:10px">Seu cinema começa aqui.</p></div>
+  <div class="footer-links"><a href="#inicio">Início</a><a href="#filmes">Filmes</a><a href="#reservar">Reservas</a><a href="#lanchonete">Lanchonete</a></div>
+ </div>
+ <div class="footer-copy">© 2026 CinePop. Projeto acadêmico de desenvolvimento web. Cartazes e marcas pertencem aos respectivos titulares.</div>
+</footer>
+
+<div class="modal" id="paymentModal">
+ <div class="modal-box">
+  <button class="close" onclick="closeModal('paymentModal')">×</button>
+  <h2>Finalizar pedido</h2>
+  <p class="modal-sub">Confira o pagamento demonstrativo da sua reserva.</p>
+  <label class="pay-option"><input type="radio" name="payment" value="PIX" checked> PIX</label>
+  <label class="pay-option"><input type="radio" name="payment" value="Cartão de crédito"> Cartão de crédito</label>
+  <label class="pay-option"><input type="radio" name="payment" value="Cartão de débito"> Cartão de débito</label>
+  <button class="checkout" onclick="finishPayment()">CONFIRMAR PEDIDO</button>
+  <p class="notice">Nenhum dado bancário é solicitado. Pagamento fictício.</p>
+ </div>
+</div>
+
+<div class="modal" id="ticketModal">
+ <div class="modal-box">
+  <button class="close" onclick="closeModal('ticketModal')">×</button>
+  <div style="text-align:center;font-size:36px">🎟️</div>
+  <h2 style="text-align:center">Pedido confirmado!</h2>
+  <p class="modal-sub" style="text-align:center">Seu ingresso demonstrativo está pronto.</p>
+  <div class="ticket">
+   <div class="logo">CINE<span>POP</span></div>
+   <div class="ticket-code" id="ticketCode">CP000000</div>
+   <h3 id="ticketMovie"></h3>
+   <p id="ticketSession"></p>
+   <p id="ticketRoom"></p>
+   <p id="ticketSeats"></p>
+   <p id="ticketFood"></p>
+   <p id="ticketPayment"></p>
+   <div style="border-top:1px dashed #777;margin:15px 0"></div>
+   <strong style="color:var(--green);font-size:20px" id="ticketTotal"></strong>
+  </div>
+  <button class="checkout" onclick="closeModal('ticketModal')">FECHAR</button>
+ </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const movies = [
+ {title:"Interestelar",genre:"Ficção",year:"2014",duration:"2h 49min",age:"10",score:"9.0",desc:"Uma equipe de exploradores viaja além desta galáxia em busca de um futuro para a humanidade.",img:"https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"},
+ {title:"Duna: Parte Dois",genre:"Ficção",year:"2024",duration:"2h 46min",age:"14",score:"8.5",desc:"Paul Atreides une forças com Chani e os Fremen em uma jornada de vingança e destino.",img:"https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"},
+ {title:"Divertida Mente 2",genre:"Animação",year:"2024",duration:"1h 36min",age:"Livre",score:"8.0",desc:"Novas emoções chegam à mente de Riley enquanto ela enfrenta uma nova fase da vida.",img:"https://image.tmdb.org/t/p/w500/9h2KgGXSmWigNTn3kQdEFFngj9i.jpg"},
+ {title:"Homem-Aranha: Sem Volta Para Casa",genre:"Ação",year:"2021",duration:"2h 28min",age:"12",score:"8.2",desc:"Peter Parker enfrenta consequências inesperadas após um feitiço que muda tudo.",img:"https://image.tmdb.org/t/p/w500/kn72J6BFcN71VYOl8sTVeo7x9ph.jpg"},
+ {title:"Oppenheimer",genre:"Drama",year:"2023",duration:"3h",age:"16",score:"8.6",desc:"A história do cientista que liderou o desenvolvimento da primeira bomba atômica.",img:"https://image.tmdb.org/t/p/w500/ptpr0kGAckfQkJeJIt8st5dglvd.jpg"},
+ {title:"Super Mario Bros. O Filme",genre:"Aventura",year:"2023",duration:"1h 32min",age:"Livre",score:"7.7",desc:"Mario e Luigi são transportados para um mundo mágico cheio de desafios.",img:"https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg"},
+ {title:"Batman",genre:"Ação",year:"2022",duration:"2h 56min",age:"14",score:"7.8",desc:"Um jovem Bruce Wayne investiga a corrupção e um criminoso misterioso em Gotham.",img:"https://image.tmdb.org/t/p/w500/74xTEgt7R36Fpooo50r9T25onhq.jpg"},
+ {title:"Viva: A Vida é uma Festa",genre:"Animação",year:"2017",duration:"1h 45min",age:"Livre",score:"8.4",desc:"Miguel atravessa uma jornada emocionante para descobrir os segredos de sua família.",img:"https://image.tmdb.org/t/p/w500/gGEsBPAijhVUFoiNpgZXqRVWJt2.jpg"},
+ {title:"Guardiões da Galáxia Vol. 3",genre:"Ação",year:"2023",duration:"2h 30min",age:"14",score:"8.0",desc:"Os Guardiões enfrentam uma missão que pode mudar o futuro de sua equipe.",img:"https://image.tmdb.org/t/p/w500/r2J02Z2OpNTctfOSN1Ydgii51I3.jpg"},
+ {title:"Wonka",genre:"Aventura",year:"2023",duration:"1h 56min",age:"Livre",score:"7.1",desc:"Conheça a história de origem do famoso fabricante de chocolates.",img:"https://image.tmdb.org/t/p/w500/qhb1qOilapbapxWQn9jtRCMwXJF.jpg"},
+ {title:"Coringa",genre:"Drama",year:"2019",duration:"2h 02min",age:"16",score:"8.2",desc:"A trajetória de Arthur Fleck em uma Gotham marcada pela desigualdade.",img:"https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg"},
+ {title:"Top Gun: Maverick",genre:"Ação",year:"2022",duration:"2h 10min",age:"12",score:"8.3",desc:"Maverick treina uma nova geração de pilotos para uma missão desafiadora.",img:"https://image.tmdb.org/t/p/w500/62HCnUTziyWcpDaBO2i1DX17ljH.jpg"}
+];
+
+const foods = [
+ {id:"popP",name:"Pipoca pequena",detail:"Porção individual · 80g",icon:"🍿",price:12},
+ {id:"popM",name:"Pipoca média",detail:"Porção média · 140g",icon:"🍿",price:17},
+ {id:"popG",name:"Pipoca grande",detail:"Para compartilhar · 220g",icon:"🍿",price:22},
+ {id:"soda",name:"Refrigerante",detail:"Copo de 500ml",icon:"🥤",price:10},
+ {id:"water",name:"Água mineral",detail:"Garrafa de 500ml",icon:"💧",price:5},
+ {id:"juice",name:"Suco",detail:"Copo de 400ml",icon:"🧃",price:9},
+ {id:"choco",name:"Chocolate",detail:"Barra individual",icon:"🍫",price:8},
+ {id:"candy",name:"Bala de goma",detail:"Pacote individual",icon:"🍬",price:6},
+ {id:"nachos",name:"Nachos",detail:"Com molho de queijo",icon:"🧀",price:18},
+ {id:"combo",name:"Combo CinePop",detail:"Pipoca média + refrigerante",icon:"🎁",price:24}
+];
+
+let genre="Todos";
+let selectedSeats=[];
+let room="Tradicional";
+let quantities={};
+let occupied=[3,8,14,19,26,31,37,43,48,52,59,64];
+let roomExtra={Tradicional:0,Premium:10,VIP:20};
+
+function money(value){
+ return value.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function renderMovies(){
+ const search=document.getElementById("search").value.toLowerCase();
+ const list=movies.filter(m=>(genre==="Todos"||m.genre===genre)&&m.title.toLowerCase().includes(search));
+ document.getElementById("movieGrid").innerHTML=list.length?list.map(m=>{
+  const i=movies.indexOf(m);
+  return `<article class="movie">
+   <div class="poster"><img src="${m.img}" alt="Cartaz de ${m.title}" onerror="this.style.display='none'"><span class="age">${m.age==="Livre"?"L":m.age+" anos"}</span></div>
+   <div class="movie-info"><h3>${m.title}</h3><div class="meta">${m.year} · ${m.genre} · ${m.duration}</div>
+   <p class="description">${m.desc}</p>
+   <div class="movie-bottom"><span class="rating">★ ${m.score}</span><button onclick="selectMovie(${i})">RESERVAR</button></div></div>
+  </article>`;
+ }).join(""):'<p style="color:#aaa;grid-column:1/-1;padding:30px">Nenhum filme encontrado.</p>';
+}
+
+function filterGenre(value,button){
+ genre=value;
+ document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ renderMovies();
+}
+
+function fillMovies(){
+ document.getElementById("movieSelect").innerHTML=movies.map((m,i)=>`<option value="${i}">${m.title}</option>`).join("");
+}
+
+function selectMovie(index){
+ document.getElementById("movieSelect").value=index;
+ updateSummary();
+ goBooking();
+ toast("Filme selecionado!");
+}
+
+function goBooking(){
+ document.getElementById("reservar").scrollIntoView({behavior:"smooth"});
+}
+
+function chooseRoom(button){
+ room=button.dataset.room;
+ document.querySelectorAll(".room-option").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ selectedSeats=[];
+ buildSeats();
+ updateSummary();
+ toast("Sala "+room+" selecionada!");
+}
+
+function buildSeats(){
+ const grid=document.getElementById("seats");
+ grid.innerHTML="";
+ for(let i=1;i<=64;i++){
+  const b=document.createElement("button");
+  b.className="seat";
+  b.textContent=i;
+  if(occupied.includes(i)){b.classList.add("occupied");b.disabled=true}
+  if(room==="VIP")b.classList.add("vip");
+  b.onclick=()=>toggleSeat(i,b);
+  grid.appendChild(b);
+ }
+}
+
+function toggleSeat(number,button){
+ if(selectedSeats.includes(number)){
+  selectedSeats=selectedSeats.filter(x=>x!==number);
+  button.classList.remove("selected");
+ }else{
+  if(selectedSeats.length>=6){toast("Limite de 6 poltronas por pedido.");return}
+  selectedSeats.push(number);
+  button.classList.add("selected");
+ }
+ updateSummary();
+}
+
+function renderFoods(){
+ document.getElementById("foodGrid").innerHTML=foods.map(f=>`
+  <div class="food-card">
+   <div class="food-icon">${f.icon}</div>
+   <h4>${f.name}</h4>
+   <p>${f.detail}</p>
+   <div class="food-row">
+    <strong>${money(f.price)}</strong>
+    <div class="quantity">
+     <button onclick="changeFood('${f.id}',-1)">−</button>
+     <span id="qty-${f.id}">0</span>
+     <button onclick="changeFood('${f.id}',1)">+</button>
+    </div>
+   </div>
+  </div>`).join("");
+}
+
+function changeFood(id,change){
+ quantities[id]=Math.max(0,(quantities[id]||0)+change);
+ document.getElementById("qty-"+id).textContent=quantities[id];
+ updateSummary();
+}
+
+function getTicketPrice(){
+ const type=document.getElementById("ticketType").value;
+ if(type==="student")return 12.5;
+ if(type==="child")return 10;
+ return 25;
+}
+
+function getFoodTotal(){
+ return foods.reduce((sum,f)=>sum+f.price*(quantities[f.id]||0),0);
+}
+
+function updateSummary(){
+ const movie=movies[Number(document.getElementById("movieSelect").value)||0];
+ const dateValue=document.getElementById("date").value;
+ const date=dateValue?dateValue.split("-").reverse().join("/"):"Não selecionada";
+ const type=document.getElementById("ticketType").value;
+ const typeName={adult:"Inteira",student:"Estudante - meia-entrada",child:"Criança até 6 anos"}[type];
+ const ticketPrice=getTicketPrice();
+ const ticketTotal=selectedSeats.length*(ticketPrice+roomExtra[room]);
+ const foodTotal=getFoodTotal();
+ const total=ticketTotal+foodTotal;
+
+ document.getElementById("summaryPoster").src=movie.img;
+ document.getElementById("summaryTitle").textContent=movie.title;
+ document.getElementById("summaryRoom").textContent="Sala "+room;
+ document.getElementById("sumDate").textContent=date;
+ document.getElementById("sumTime").textContent=document.getElementById("time").value;
+ document.getElementById("sumSeats").textContent=selectedSeats.length?selectedSeats.sort((a,b)=>a-b).join(", "):"Nenhuma";
+ document.getElementById("sumType").textContent=typeName;
+ document.getElementById("sumTickets").textContent=selectedSeats.length;
+ document.getElementById("sumTicketPrice").textContent=money(ticketTotal);
+ document.getElementById("sumFood").textContent=money(foodTotal);
+ document.getElementById("sumTotal").textContent=money(total);
+
+ const details=foods.filter(f=>(quantities[f.id]||0)>0).map(f=>
+  `<div class="line"><span>${f.name} x ${quantities[f.id]}</span><strong>${money(f.price*quantities[f.id])}</strong></div>`
+ ).join("");
+ document.getElementById("foodDetails").innerHTML=details;
+
+ document.getElementById("checkout").disabled=selectedSeats.length===0||!dateValue;
+}
+
+function openPayment(){
+ if(!selectedSeats.length||!document.getElementById("date").value){toast("Escolha a data e as poltronas.");return}
+ document.getElementById("paymentModal").classList.add("show");
+}
+
+function finishPayment(){
+ const movie=movies[Number(document.getElementById("movieSelect").value)||0];
+ const date=document.getElementById("date").value.split("-").reverse().join("/");
+ const time=document.getElementById("time").value;
+ const payment=document.querySelector('input[name="payment"]:checked').value;
+ const total=selectedSeats.length*(getTicketPrice()+roomExtra[room])+getFoodTotal();
+ const code="CP"+Math.random().toString(36).substring(2,8).toUpperCase();
+ const foodText=foods.filter(f=>(quantities[f.id]||0)>0).map(f=>`${f.name} x${quantities[f.id]}`).join(", ")||"Sem alimentação";
+ const type=document.getElementById("ticketType").selectedOptions[0].textContent;
+
+ document.getElementById("ticketCode").textContent=code;
+ document.getElementById("ticketMovie").textContent=movie.title;
+ document.getElementById("ticketSession").textContent=date+" · "+time;
+ document.getElementById("ticketRoom").textContent="Sala "+room+" · "+type;
+ document.getElementById("ticketSeats").textContent="Poltronas: "+selectedSeats.sort((a,b)=>a-b).join(", ");
+ document.getElementById("ticketFood").textContent="Lanchonete: "+foodText;
+ document.getElementById("ticketPayment").textContent="Pagamento simulado: "+payment;
+ document.getElementById("ticketTotal").textContent=money(total);
+
+ const history=JSON.parse(localStorage.getItem("cinepopReservations")||"[]");
+ history.push({code,movie:movie.title,date,time,room,seats:[...selectedSeats],food:{...quantities},total,payment});
+ localStorage.setItem("cinepopReservations",JSON.stringify(history));
+
+ occupied.push(...selectedSeats);
+ selectedSeats=[];
+ quantities={};
+ foods.forEach(f=>{document.getElementById("qty-"+f.id).textContent="0"});
+ closeModal("paymentModal");
+ buildSeats();
+ updateSummary();
+ document.getElementById("ticketModal").classList.add("show");
+}
+
+function closeModal(id){
+ document.getElementById(id).classList.remove("show");
+}
+
+function toast(message){
+ const t=document.getElementById("toast");
+ t.textContent=message;
+ t.classList.add("show");
+ setTimeout(()=>t.classList.remove("show"),2500);
+}
+
+const date=document.getElementById("date");
+const now=new Date();
+const localDate=new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().split("T")[0];
+date.min=localDate;
+date.value=localDate;
+
+renderMovies();
+fillMovies();
+renderFoods();
+buildSeats();
+updateSummary();
+
+document.querySelectorAll("#nav a").forEach(a=>{
+ a.addEventListener("click",()=>document.getElementById("nav").classList.remove("open"));
+});
+</script>
+</body>
+</html>
